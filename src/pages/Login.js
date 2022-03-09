@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
-import { Loading } from '../comp';
+import Loading from './Loading';
 
 class Login extends Component {
   constructor(props) {
