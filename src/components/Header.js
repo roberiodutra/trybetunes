@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Loading from './Loading';
 import { getUser } from '../services/userAPI';
 
@@ -22,6 +23,18 @@ class Header extends Component {
       });
   }
 
+  navLinks = () => {
+    const arr = ['search', 'favorites', 'profile'];
+    return arr.map((el) => {
+      const str = `/${el}`;
+      const str2 = `link-to-${el}`;
+      return (
+        <li key={ el }>
+          <Link to={ str } data-testid={ str2 }>{ el.toUpperCase() }</Link>
+        </li>);
+    });
+  }
+
   render() {
     const { isLoading, userName } = this.state;
     return (
@@ -29,6 +42,9 @@ class Header extends Component {
         {isLoading
           ? <Loading />
           : <span data-testid="header-user-name">{userName}</span>}
+        <nav>
+          <ul>{this.navLinks()}</ul>
+        </nav>
       </header>
     );
   }
