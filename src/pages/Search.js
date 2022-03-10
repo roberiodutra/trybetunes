@@ -1,29 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
 
 class Search extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchArtist: '',
-      isButton: true,
-    };
-  }
-
-  onInputChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value }, this.validate);
-  };
-
-  validate = () => {
-    const { searchArtist } = this.state;
-    const MIN = 2;
-    return (searchArtist.length >= MIN)
-      ? this.setState({ isButton: false })
-      : this.setState({ isButton: true });
-  }
-
   render() {
-    const { isButton, searchArtist } = this.state;
+    const { onInputChange, isButton, inputName } = this.props;
     return (
       <div data-testid="page-search">
         <Header />
@@ -31,10 +12,11 @@ class Search extends Component {
           <input
             type="text"
             data-testid="search-artist-input"
-            value={ searchArtist }
-            name="searchArtist"
+            id="search"
+            value={ inputName }
+            name="inputName"
             placeholder="Artist Name"
-            onChange={ this.onInputChange }
+            onChange={ onInputChange }
           />
           <button
             type="button"
@@ -48,5 +30,11 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  inputName: PropTypes.string,
+  onInputChange: PropTypes.func,
+  isButton: PropTypes.bool,
+}.isRequired;
 
 export default Search;

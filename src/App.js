@@ -11,13 +11,13 @@ class App extends Component {
     };
   }
 
-  onInputChange = ({ target: { value } }) => {
-    this.setState({ inputName: value }, this.validate);
-  }
+  onInputChange = ({ target: { name, value, id } }) => (id === 'login'
+    ? this.setState({ [name]: value }, this.validate(2))
+    : this.setState({ [name]: value }, this.validate(1)));
 
-  validate = () => {
+  validate = (number) => {
     const { inputName } = this.state;
-    const MIN = 3;
+    const MIN = number;
     return (inputName.length >= MIN)
       ? this.setState({ isButton: false })
       : this.setState({ isButton: true });
@@ -32,13 +32,22 @@ class App extends Component {
     />);
   }
 
+  search = () => {
+    const { inputName, isButton } = this.state;
+    return (<Search
+      onInputChange={ this.onInputChange }
+      inputName={ inputName }
+      isButton={ isButton }
+    />);
+  }
+
   render() {
     return (
       <div>
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={ this.login } />
-            <Route exact path="/search" component={ Search } />
+            <Route exact path="/search" component={ this.search } />
             <Route exact path="/album/:id" component={ Album } />
             <Route exact path="/favorites" component={ Favorites } />
             <Route exact path="/profile" component={ Profile } />

@@ -31,7 +31,8 @@ class Login extends Component {
             <label htmlFor="login-name">
               <input
                 type="text"
-                name="login-name"
+                name="inputName"
+                id="login"
                 value={ inputName }
                 data-testid="login-name-input"
                 onChange={ onInputChange }
