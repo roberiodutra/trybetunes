@@ -5,4 +5,3 @@ export { default as Favorites } from './pages/Favorites';
 export { default as Profile } from './pages/Profile';
 export { default as ProfileEdit } from './pages/ProfileEdit';
 export { default as NotFound } from './pages/NotFound';
-export { default as Loading } from './pages/Loading';
