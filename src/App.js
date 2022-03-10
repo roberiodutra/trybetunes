@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Login, Search, Album, Favorites, Profile, ProfileEdit, NotFound } from './comp';
+import searchAlbumsAPI from './services/searchAlbumsAPI';
 
 class App extends Component {
   constructor(props) {
@@ -8,7 +9,25 @@ class App extends Component {
     this.state = {
       inputName: '',
       isButton: true,
+      searchName: '',
+      albumSearch: [],
+      isLoading: false,
+      isSearch: false,
     };
+  }
+
+  onHandleClick = () => {
+    const { inputName } = this.state;
+    const copy = inputName.slice();
+    this.setState({ inputName: '', isLoading: true, isSearch: false },
+      async () => {
+        this.setState({
+          isLoading: false,
+          searchName: copy,
+          isSearch: true,
+          albumSearch: await searchAlbumsAPI(copy),
+        });
+      });
   }
 
   onInputChange = ({ target: { name, value, id } }) => (id === 'login'
@@ -33,11 +52,24 @@ class App extends Component {
   }
 
   search = () => {
-    const { inputName, isButton } = this.state;
+    const {
+      inputName,
+      isButton,
+      searchName,
+      isLoading,
+      albumSearch,
+      isSearch,
+    } = this.state;
+
     return (<Search
       onInputChange={ this.onInputChange }
+      onHandleClick={ this.onHandleClick }
       inputName={ inputName }
       isButton={ isButton }
+      albumSearch={ albumSearch }
+      searchName={ searchName }
+      isLoading={ isLoading }
+      isSearch={ isSearch }
     />);
   }
 

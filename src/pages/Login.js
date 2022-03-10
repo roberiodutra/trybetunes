@@ -56,6 +56,9 @@ Login.propTypes = {
   inputName: PropTypes.string,
   onInputChange: PropTypes.func,
   isButton: PropTypes.bool,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }),
 }.isRequired;
 
 export default withRouter(Login);
