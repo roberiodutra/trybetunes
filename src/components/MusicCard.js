@@ -12,7 +12,7 @@ class MusicCard extends Component {
     };
   }
 
-  isCheckedBox = async ({ target: { checked, id } }) => {
+  favorited = async ({ target: { checked, id } }) => {
     const { songs } = this.props;
     this.setState({ isLoading: true },
       async () => {
@@ -21,6 +21,11 @@ class MusicCard extends Component {
           favorites: [...prevState.favorites, id], isLoading: false,
         }));
       });
+  }
+
+  isChecked = (checkId) => {
+    const { favorites } = this.state;
+    return favorites.some((el) => el === checkId.toString());
   }
 
   songsInfo = () => {
@@ -55,8 +60,9 @@ class MusicCard extends Component {
             name="favorita"
             type="checkbox"
             data-testid={ `checkbox-music-${track.trackId}` }
-            onChange={ this.isCheckedBox }
+            onChange={ this.favorited }
             id={ track.trackId }
+            checked={ this.isChecked(track.trackId) }
           />
         </label>
       </div>
