@@ -25,14 +25,15 @@ class Header extends Component {
 
   navLinks = () => {
     const arr = ['search', 'favorites', 'profile'];
-    return arr.map((el) => {
-      const str = `/${el}`;
-      const str2 = `link-to-${el}`;
-      return (
-        <li key={ el }>
-          <Link to={ str } data-testid={ str2 }>{ el.toUpperCase() }</Link>
-        </li>);
-    });
+    return arr.map((el) => (
+      <li key={ el }>
+        <Link
+          to={ `/${el}` }
+          data-testid={ `link-to-${el}` }
+        >
+          { el.toUpperCase() }
+        </Link>
+      </li>));
   }
 
   render() {
