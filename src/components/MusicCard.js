@@ -25,10 +25,10 @@ class MusicCard extends Component {
   favorited = ({ target: { id } }) => {
     const { songs } = this.props;
     const { favorites } = this.state;
-    const track = songs.find((music) => music.trackId == id);
+    const track = songs.find((music) => music.trackId === `${id}`);
     this.setState(
       { isLoading: true },
-      async () => !favorites.some((music) => music.trackId == id)
+      async () => !favorites.some((music) => music.trackId === `${id}`)
         && (await addSong(track),
         this.setState({ isLoading: false })),
     );
@@ -48,7 +48,7 @@ class MusicCard extends Component {
   trackList = () => {
     const { songs } = this.props;
     const { favorites } = this.state;
-    const arr = [ ...songs ];
+    const arr = [...songs];
     return arr.map((track, i) => i !== 0 && (
       <div key={ track.trackId }>
         <p>{track.trackName}</p>
