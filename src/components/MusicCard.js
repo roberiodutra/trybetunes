@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import Loading from './Loading';
 
 class MusicCard extends Component {
@@ -22,27 +22,14 @@ class MusicCard extends Component {
     this.setState({ favorites: songsFavorites });
   }
 
-  favorited = ({ target: { id } }) => {
+  favorited = async ({ target: { name, checked } }) => {
     const { songs } = this.props;
-    const { favorites } = this.state;
-    const track = songs.find((music) => music.trackId === `${id}`);
-    this.setState(
-      { isLoading: true },
-      async () => !favorites.some((music) => music.trackId === `${id}`)
-        && (await addSong(track),
-        this.setState({ isLoading: false })),
-    );
-  }
-
-  songsInfo = () => {
-    const { songs } = this.props;
-    return songs.map((music, i) => i === 0 && (
-      <div key={ music.collectionId }>
-        <img src={ music.artworkUrl100 } alt={ music.collectionName } />
-        <p data-testid="artist-name">{music.artistName}</p>
-        <p data-testid="album-name">{music.collectionName}</p>
-      </div>
-    ));
+    const track = songs.filter((music) => music.trackName === name);
+    this.setState(() => ({ isLoading: true }));
+    return (checked) ? (await addSong(...track)
+      && this.setState(() => ({ isLoading: false })))
+      : (await removeSong(...track)
+      && this.setState(() => ({ isLoading: false })));
   }
 
   trackList = () => {
@@ -65,12 +52,12 @@ class MusicCard extends Component {
         <label htmlFor="favorita">
           Favorita
           <input
-            name="favorita"
+            name={ track.trackName }
             type="checkbox"
             data-testid={ `checkbox-music-${track.trackId}` }
             onChange={ this.favorited }
             id={ track.trackId }
-            checked={ favorites.some((music) => music.trackName === track.trackName) }
+            checked={ favorites.some((music) => music.trackId === track.trackId) }
           />
         </label>
       </div>
@@ -84,7 +71,6 @@ class MusicCard extends Component {
         { isLoading ? <Loading />
           : (
             <div>
-              { this.songsInfo() }
               { this.trackList() }
             </div>
           )}

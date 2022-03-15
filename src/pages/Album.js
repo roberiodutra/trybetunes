@@ -19,11 +19,23 @@ class Album extends Component {
     });
   }
 
+  songsInfo = () => {
+    const { songs } = this.state;
+    return songs.map((el, i) => i === 0 && (
+      <div key={ el.collectionId }>
+        <img src={ el.artworkUrl100 } alt={ el.collectionName } />
+        <p data-testid="artist-name">{el.artistName}</p>
+        <p data-testid="album-name">{el.collectionName}</p>
+      </div>
+    ));
+  }
+
   render() {
     const { songs } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
+        { this.songsInfo() }
         <MusicCard songs={ songs } />
       </div>
     );
