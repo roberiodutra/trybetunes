@@ -1,31 +1,37 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 import Loading from './Loading';
-import { addSong } from '../services/favoriteSongsAPI';
 
 class MusicCard extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+
     this.state = {
       isLoading: false,
       favorites: [],
     };
   }
 
-  favorited = async ({ target: { checked, id } }) => {
-    const { songs } = this.props;
-    this.setState({ isLoading: true },
-      async () => {
-        if (checked) await addSong(songs);
-        this.setState((prevState) => ({
-          favorites: [...prevState.favorites, id], isLoading: false,
-        }));
-      });
+  componentDidUpdate() {
+    this.songsFavorites();
   }
 
-  isChecked = (checkId) => {
+  songsFavorites = async () => {
+    const songsFavorites = await getFavoriteSongs();
+    this.setState({ favorites: songsFavorites });
+  }
+
+  favorited = ({ target: { id } }) => {
+    const { songs } = this.props;
     const { favorites } = this.state;
-    return favorites.some((el) => el === checkId.toString());
+    const track = songs.find((music) => music.trackId == id);
+    this.setState(
+      { isLoading: true },
+      async () => !favorites.some((music) => music.trackId == id)
+        && (await addSong(track),
+        this.setState({ isLoading: false })),
+    );
   }
 
   songsInfo = () => {
@@ -41,7 +47,9 @@ class MusicCard extends Component {
 
   trackList = () => {
     const { songs } = this.props;
-    return songs.map((track, i) => i > 0 && (
+    const { favorites } = this.state;
+    const arr = [ ...songs ];
+    return arr.map((track, i) => i !== 0 && (
       <div key={ track.trackId }>
         <p>{track.trackName}</p>
         <audio
@@ -62,7 +70,7 @@ class MusicCard extends Component {
             data-testid={ `checkbox-music-${track.trackId}` }
             onChange={ this.favorited }
             id={ track.trackId }
-            checked={ this.isChecked(track.trackId) }
+            checked={ favorites.some((music) => music.trackName === track.trackName) }
           />
         </label>
       </div>
